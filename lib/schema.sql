@@ -7,6 +7,10 @@ CREATE TABLE IF NOT EXISTS companies (
   name TEXT NOT NULL,
   adminName TEXT NOT NULL,
   adminEmail TEXT NOT NULL,
+  legal_name TEXT,
+  cnpj TEXT,
+  address TEXT,
+  city_uf TEXT,
   createdAt TEXT DEFAULT (datetime('now'))
 );
 

@@ -208,6 +208,8 @@ export default function SuperAdminPortal() {
         const q = companySearch.trim().toLowerCase();
         return companies.filter(c =>
             (c.name && c.name.toLowerCase().includes(q)) ||
+            (c.legal_name && c.legal_name.toLowerCase().includes(q)) ||
+            (c.cnpj && c.cnpj.toLowerCase().includes(q)) ||
             (c.adminName && c.adminName.toLowerCase().includes(q)) ||
             (c.adminEmail && c.adminEmail.toLowerCase().includes(q))
         );
@@ -935,6 +937,11 @@ export default function SuperAdminPortal() {
                                                     <div style={{ fontSize: '0.74rem', color: '#64748b', marginTop: 3 }}>
                                                         Admin: <strong>{c.adminName || '—'}</strong> ({c.adminEmail || '—'})
                                                     </div>
+                                                    <div style={{ fontSize: '0.73rem', color: (c.legal_name || c.cnpj) ? '#334155' : '#94a3b8', marginTop: 3 }}>
+                                                        {(c.legal_name || c.cnpj)
+                                                            ? `${c.legal_name || ''}${c.legal_name && c.cnpj ? ' · ' : ''}${c.cnpj ? `CNPJ: ${c.cnpj}` : ''}`
+                                                            : 'Razão social / CNPJ não cadastrados'}
+                                                    </div>
                                                 </div>
                                                 <span className="badge badge-info">{c.totalUsers} usuários</span>
                                             </div>
@@ -1022,6 +1029,16 @@ export default function SuperAdminPortal() {
                                         <h2 className="sa-h2" style={{ margin: 0, fontSize: '1.35rem' }}>{selectedCompany.name}</h2>
                                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, marginTop: 6, fontSize: '0.8rem', color: '#64748b' }}>
                                             <span>Admin: <strong>{selectedCompany.adminName}</strong> ({selectedCompany.adminEmail})</span>
+                                            {(selectedCompany.legal_name || selectedCompany.cnpj) && (
+                                                <>
+                                                    <span>•</span>
+                                                    <span>
+                                                        {selectedCompany.legal_name ? <strong>{selectedCompany.legal_name}</strong> : null}
+                                                        {selectedCompany.legal_name && selectedCompany.cnpj ? ' — ' : ''}
+                                                        {selectedCompany.cnpj ? `CNPJ: ${selectedCompany.cnpj}` : ''}
+                                                    </span>
+                                                </>
+                                            )}
                                             <span>•</span>
                                             <span>
                                                 ID: <code style={{ background: '#f1f5f9', padding: '1px 6px', borderRadius: 4 }}>{selectedCompany.id}</code>

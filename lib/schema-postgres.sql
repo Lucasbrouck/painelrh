@@ -10,7 +10,11 @@ CREATE TABLE IF NOT EXISTS companies (
   longitude DOUBLE PRECISION,
   checkinRadius INTEGER DEFAULT 200,
   saipos_token TEXT,
-  ignore_ficha_venda INTEGER DEFAULT 0
+  ignore_ficha_venda INTEGER DEFAULT 0,
+  legal_name TEXT,
+  cnpj TEXT,
+  address TEXT,
+  city_uf TEXT
 );
 
 CREATE TABLE IF NOT EXISTS users (

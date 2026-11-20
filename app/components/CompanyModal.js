@@ -1,7 +1,16 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { X, Building2, Save, MapPin, Link2, Eye, EyeOff, RefreshCw } from 'lucide-react';
+import { X, Building2, Save, MapPin, Link2, Eye, EyeOff, RefreshCw, FileText } from 'lucide-react';
+
+function formatCnpjMask(val) {
+    const d = String(val || '').replace(/\D/g, '').slice(0, 14);
+    if (d.length <= 2) return d;
+    if (d.length <= 5) return `${d.slice(0, 2)}.${d.slice(2)}`;
+    if (d.length <= 8) return `${d.slice(0, 2)}.${d.slice(2, 5)}.${d.slice(5)}`;
+    if (d.length <= 12) return `${d.slice(0, 2)}.${d.slice(2, 5)}.${d.slice(5, 8)}/${d.slice(8)}`;
+    return `${d.slice(0, 2)}.${d.slice(2, 5)}.${d.slice(5, 8)}/${d.slice(8, 12)}-${d.slice(12)}`;
+}
 
 function generateRandomPassword() {
     const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789!@#';
@@ -17,6 +26,10 @@ export default function CompanyModal({ open, company, onClose, onSaved }) {
 
     const [form, setForm] = useState({
         name: '',
+        legal_name: '',
+        cnpj: '',
+        address: '',
+        city_uf: '',
         adminName: '',
         adminEmail: '',
         adminPassword: '',
@@ -37,6 +50,10 @@ export default function CompanyModal({ open, company, onClose, onSaved }) {
         if (company) {
             setForm({
                 name: company.name || '',
+                legal_name: company.legal_name || '',
+                cnpj: company.cnpj || '',
+                address: company.address || '',
+                city_uf: company.city_uf || '',
                 adminName: company.adminName || '',
                 adminEmail: company.adminEmail || '',
                 adminPassword: '',
@@ -49,6 +66,10 @@ export default function CompanyModal({ open, company, onClose, onSaved }) {
         } else {
             setForm({
                 name: '',
+                legal_name: '',
+                cnpj: '',
+                address: '',
+                city_uf: '',
                 adminName: '',
                 adminEmail: '',
                 adminPassword: '',
@@ -72,6 +93,10 @@ export default function CompanyModal({ open, company, onClose, onSaved }) {
                 ? {
                     id: company.id,
                     name: form.name,
+                    legal_name: form.legal_name,
+                    cnpj: form.cnpj,
+                    address: form.address,
+                    city_uf: form.city_uf,
                     adminName: form.adminName,
                     adminEmail: form.adminEmail,
                     latitude: form.latitude,
@@ -216,6 +241,60 @@ export default function CompanyModal({ open, company, onClose, onSaved }) {
                             </div>
                         </div>
                     )}
+
+                    <div style={{
+                        background: '#f8fafc',
+                        border: '1px solid #e2e8f0',
+                        borderRadius: 12,
+                        padding: 14,
+                        marginBottom: 14
+                    }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.82rem', fontWeight: 700, color: '#334155', marginBottom: 10 }}>
+                            <FileText size={15} color="#da291c" /> Dados Fiscais & Documentos (Razão Social / CNPJ)
+                        </div>
+                        <div className="input-group" style={{ marginBottom: 10 }}>
+                            <label className="input-label">Razão Social</label>
+                            <input
+                                type="text"
+                                className="input-field"
+                                placeholder="Ex: JALAPENO CULINARIA MEXICANA LTDA"
+                                value={form.legal_name}
+                                onChange={e => setForm({ ...form, legal_name: e.target.value })}
+                            />
+                        </div>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 10 }}>
+                            <div>
+                                <label className="input-label">CNPJ</label>
+                                <input
+                                    type="text"
+                                    className="input-field"
+                                    placeholder="00.000.000/0001-00"
+                                    value={form.cnpj}
+                                    onChange={e => setForm({ ...form, cnpj: formatCnpjMask(e.target.value) })}
+                                />
+                            </div>
+                            <div>
+                                <label className="input-label">Cidade - UF</label>
+                                <input
+                                    type="text"
+                                    className="input-field"
+                                    placeholder="Ex: Rio de Janeiro - RJ"
+                                    value={form.city_uf}
+                                    onChange={e => setForm({ ...form, city_uf: e.target.value })}
+                                />
+                            </div>
+                        </div>
+                        <div>
+                            <label className="input-label">Endereço da Unidade</label>
+                            <input
+                                type="text"
+                                className="input-field"
+                                placeholder="Ex: Rua Conde de Bonfim, 123 - Tijuca"
+                                value={form.address}
+                                onChange={e => setForm({ ...form, address: e.target.value })}
+                            />
+                        </div>
+                    </div>
 
                     <div style={{
                         background: '#f8fafc',
